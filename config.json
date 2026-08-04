@@ -1,1 +1,61 @@
-
+{
+  "workflowApiVersion": "1.1",
+  "metaData": {
+    "icon": "https://raw.githubusercontent.com/YOUR_USERNAME/sfmc-custom-activity/main/images/icon.png",
+    "iconSmall": "https://raw.githubusercontent.com/YOUR_USERNAME/sfmc-custom-activity/main/images/icon-small.png",
+    "category": "message"
+  },
+  "type": "REST",
+  "lang": {
+    "en-US": {
+      "name": "Sprinklr Survey (Test)",
+      "description": "Sends subscriber attributes and DE data to Sprinklr webhook"
+    }
+  },
+  "arguments": {
+    "execute": {
+      "inArguments": [
+        {"subscriberKey": "{{Contact.Key}}"},
+        {"emailAddress": "{{Contact.Default.Email}}"},
+        {"firstName": "{{Contact.Attribute.\"First Name\"}}"},
+        {"lastName": "{{Contact.Attribute.\"Last Name\"}}"},
+        {"loyaltyTier": "{{Contact.Attribute.\"Loyalty Tier\"}}"},
+        {"languagePreference": "{{Contact.Attribute.\"Language Preference\"}}"},
+        {"leadId": "{{Lead_Events.LeadId}}"},
+        {"leadSource": "{{Lead_Events.LeadSource}}"},
+        {"company": "{{Lead_Events.Company}}"},
+        {"productInterest": "{{Lead_Events.ProductInterest}}"},
+        {"leadScore": "{{Lead_Events.LeadScore}}"},
+        {"createdDate": "{{Lead_Events.CreatedDate}}"}
+      ],
+      "outArguments": [
+        {"surveyLink": ""},
+        {"optOutLink": ""},
+        {"distributionId": ""},
+        {"status": ""}
+      ],
+      "timeout": 30000,
+      "retryCount": 3,
+      "retryDelay": 2000,
+      "concurrentRequests": 5,
+      "url": "https://webhook.site/b7583c7a-1b3d-4274-b83c-fb904e3756be"
+    }
+  },
+  "configurationArguments": {
+    "publish": {
+      "url": "https://webhook.site/b7583c7a-1b3d-4274-b83c-fb904e3756be?lifecycle=publish"
+    },
+    "validate": {
+      "url": "https://webhook.site/b7583c7a-1b3d-4274-b83c-fb904e3756be?lifecycle=validate"
+    },
+    "stop": {
+      "url": "https://webhook.site/b7583c7a-1b3d-4274-b83c-fb904e3756be?lifecycle=stop"
+    },
+    "save": {
+      "url": "https://webhook.site/b7583c7a-1b3d-4274-b83c-fb904e3756be?lifecycle=save"
+    }
+  },
+  "wizardSteps": [
+    {"label": "Configure Survey", "key": "step1"}
+  ]
+}
