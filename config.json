@@ -1,9 +1,10 @@
 {
   "workflowApiVersion": "1.1",
   "metaData": {
-    "icon": "https://raw.githubusercontent.com/YOUR_USERNAME/sfmc-custom-activity/main/images/icon.png",
-    "iconSmall": "https://raw.githubusercontent.com/YOUR_USERNAME/sfmc-custom-activity/main/images/icon-small.png",
-    "category": "message"
+    "icon": "",
+    "iconSmall": "",
+    "category": "message",
+    "isConfigured": true
   },
   "type": "REST",
   "lang": {
@@ -55,28 +56,7 @@
       "url": "https://webhook.site/b7583c7a-1b3d-4274-b83c-fb904e3756be?lifecycle=save"
     }
   },
-  "userInterfaces": {
-    "configModal": {
-      "height": 400,
-      "width": 600,
-      "url": "https://pankaj69.github.io/sfmc-custom-activity/ui/config.html"
-    },
-    "runningModal": {
-      "url": "https://pankaj69.github.io/sfmc-custom-activity/ui/running.html"
-    },
-    "runningHover": {
-      "url": "https://pankaj69.github.io/sfmc-custom-activity/ui/running-hover.html"
-    }
-  },
-  "wizardSteps": [
-    {"label": "Configure Survey", "key": "step1"}
-  ],
-  "schema": {
-    "arguments": {
-      "execute": {
-        "inArguments": [],
-        "outArguments": []
-      }
-    }
+  "edit": {
+    "url": "https://webhook.site/b7583c7a-1b3d-4274-b83c-fb904e3756be?lifecycle=edit"
   }
 }
