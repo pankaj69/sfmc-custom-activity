@@ -14,16 +14,17 @@
     'use strict';
     var connection = new Postmonger.Session();
     var payload = {};
+    var steps = [{"label": "Configure Survey", "key": "step1"}];
 
     connection.on('initActivity', function(data) {
       payload = data;
-      // Mark as configured immediately (no user input needed for test)
+      // Immediately mark as configured
       payload['metaData'].isConfigured = true;
       connection.trigger('updateActivity', payload);
     });
 
-    connection.on('requestedInteraction', function(interaction) {
-      console.log('interaction:', interaction);
+    connection.on('requestedTriggerEventDefinition', function(eventDefinitionModel) {
+      // no-op
     });
 
     connection.on('clickedNext', function() {
@@ -31,8 +32,12 @@
       connection.trigger('updateActivity', payload);
     });
 
+    connection.on('gotoStep', function(step) {
+      // no-op
+    });
+
     connection.trigger('ready');
-    connection.trigger('requestInteraction');
+    connection.trigger('updateSteps', steps);
   </script>
 </body>
 </html>
