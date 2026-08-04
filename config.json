@@ -55,7 +55,28 @@
       "url": "https://webhook.site/b7583c7a-1b3d-4274-b83c-fb904e3756be?lifecycle=save"
     }
   },
+  "userInterfaces": {
+    "configModal": {
+      "height": 400,
+      "width": 600,
+      "url": "https://pankaj69.github.io/sfmc-custom-activity/ui/config.html"
+    },
+    "runningModal": {
+      "url": "https://pankaj69.github.io/sfmc-custom-activity/ui/running.html"
+    },
+    "runningHover": {
+      "url": "https://pankaj69.github.io/sfmc-custom-activity/ui/running-hover.html"
+    }
+  },
   "wizardSteps": [
     {"label": "Configure Survey", "key": "step1"}
-  ]
+  ],
+  "schema": {
+    "arguments": {
+      "execute": {
+        "inArguments": [],
+        "outArguments": []
+      }
+    }
+  }
 }
