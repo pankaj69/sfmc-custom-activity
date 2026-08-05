@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Custom Activity</title>
+</head>
+<body>
+    <p style="font-family:Arial;padding:20px;">✓ Configured</p>
+    <script>
+    (function(){
+        function post(t,d){var m={type:t};if(d)m.payload=d;window.parent.postMessage(m,'*');}
+        window.addEventListener('message',function(e){
+            var d=e.data;
+            if(typeof d==='string'){try{d=JSON.parse(d);}catch(x){return;}}
+            if(!d||!d.type)return;
+            if(d.type==='initActivity'){
+                var p=d.payload||{};p.metaData=p.metaData||{};p.metaData.isConfigured=true;
+                post('updateActivity',p);
+            }
+            if(d.type==='clickedNext'||d.type==='clickedDone'){
+                var p=d.payload||{};p.metaData=p.metaData||{};p.metaData.isConfigured=true;
+                post('updateActivity',p);post('nextStep');
+            }
+        },false);
+        post('ready');
+    })();
+    </script>
+</body>
+</html>
