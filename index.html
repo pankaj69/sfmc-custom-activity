@@ -3,72 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <title>Custom Activity</title>
+    <script src="https://cdn.jsdelivr.net/npm/postmonger@1.0.6/postmonger.js"></script>
 </head>
 <body>
-    <p style="font-family:Arial;padding:20px;">✓ Configured</p>
+    <p id="status" style="font-family:Arial;padding:20px;">Loading...</p>
     <script>
-    (function(){
-        var activityPayload = {};
-        var eventDefKey = '';
+    (function() {
+        var connection = new Postmonger.Session();
+        var payload = {};
+        var eventKey = '';
 
-        function post(t, d) {
-            var m = { type: t };
-            if (d !== undefined) m.payload = d;
-            window.parent.postMessage(m, '*');
+        connection.trigger('ready');
+
+        connection.on('initActivity', function(data) {
+            payload = data || {};
+            connection.trigger('requestTriggerEventDefinition');
+        });
+
+        connection.on('requestedTriggerEventDefinition', function(data) {
+            eventKey = (data || {}).eventDefinitionKey || '';
+            document.getElementById('status').textContent = eventKey
+                ? '✓ Configured (Key: ' + eventKey + ')'
+                : '✓ Configured (No event key found)';
+            buildAndUpdate();
+        });
+
+        connection.on('clickedNext', function() {
+            buildAndUpdate();
+            connection.trigger('nextStep');
+        });
+
+        connection.on('clickedDone', function() {
+            buildAndUpdate();
+            connection.trigger('nextStep');
+        });
+
+        function buildAndUpdate() {
+            payload.arguments = payload.arguments || {};
+            payload.arguments.execute = payload.arguments.execute || {};
+
+            if (eventKey) {
+                payload.arguments.execute.inArguments = [
+                    {"subscriberKey": "{{Contact.Key}}"},
+                    {"emailAddress": "{{Event." + eventKey + ".EmailAddress}}"},
+                    {"leadId": "{{Event." + eventKey + ".LeadId}}"},
+                    {"leadSource": "{{Event." + eventKey + ".LeadSource}}"},
+                    {"company": "{{Event." + eventKey + ".Company}}"},
+                    {"productInterest": "{{Event." + eventKey + ".ProductInterest}}"},
+                    {"leadScore": "{{Event." + eventKey + ".LeadScore}}"},
+                    {"createdDate": "{{Event." + eventKey + ".CreatedDate}}"}
+                ];
+            }
+
+            payload.metaData = payload.metaData || {};
+            payload.metaData.isConfigured = true;
+            connection.trigger('updateActivity', payload);
         }
-
-        function buildArgs() {
-            if (!eventDefKey) return;
-            activityPayload.arguments = activityPayload.arguments || {};
-            activityPayload.arguments.execute = activityPayload.arguments.execute || {};
-            activityPayload.arguments.execute.inArguments = [
-                {"subscriberKey": "{{Contact.Key}}"},
-                {"emailAddress": "{{Event." + eventDefKey + ".\"EmailAddress\"}}"},
-                {"leadId": "{{Event." + eventDefKey + ".\"LeadId\"}}"},
-                {"leadSource": "{{Event." + eventDefKey + ".\"LeadSource\"}}"},
-                {"company": "{{Event." + eventDefKey + ".\"Company\"}}"},
-                {"productInterest": "{{Event." + eventDefKey + ".\"ProductInterest\"}}"},
-                {"leadScore": "{{Event." + eventDefKey + ".\"LeadScore\"}}"},
-                {"createdDate": "{{Event." + eventDefKey + ".\"CreatedDate\"}}"}
-            ];
-        }
-
-        window.addEventListener('message', function(e) {
-            var d = e.data;
-            if (typeof d === 'string') { try { d = JSON.parse(d); } catch(x) { return; } }
-            if (!d || !d.type) return;
-
-            if (d.type === 'initActivity') {
-                activityPayload = d.payload || {};
-                post('requestInteraction');
-            }
-
-            if (d.type === 'requestedInteraction') {
-                var interaction = d.payload || {};
-                var triggers = interaction.triggers || [];
-                if (triggers.length > 0) {
-                    eventDefKey = (triggers[0].metaData || {}).eventDefinitionKey || '';
-                }
-                buildArgs();
-                activityPayload.metaData = activityPayload.metaData || {};
-                activityPayload.metaData.isConfigured = true;
-                post('updateActivity', activityPayload);
-            }
-
-            if (d.type === 'clickedNext' || d.type === 'clickedDone') {
-                buildArgs();
-                activityPayload.metaData = activityPayload.metaData || {};
-                activityPayload.metaData.isConfigured = true;
-                post('updateActivity', activityPayload);
-                post('nextStep');
-            }
-
-            if (d.type === 'clickedBack') {
-                post('prevStep');
-            }
-        }, false);
-
-        post('ready');
     })();
     </script>
 </body>
