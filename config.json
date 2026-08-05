@@ -23,7 +23,7 @@
       "retryCount": 0,
       "retryDelay": 1000,
       "concurrentRequests": 1,
-      "url": "https://webhook.site/6742bb6a-ece1-4aa5-ad11-2b4056fd325d"
+      "url": "https://sprinklr-test.free.beeceptor.com"
     }
   },
   "configurationArguments": {}
