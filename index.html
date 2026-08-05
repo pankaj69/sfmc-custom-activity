@@ -8,20 +8,66 @@
     <p style="font-family:Arial;padding:20px;">✓ Configured</p>
     <script>
     (function(){
-        function post(t,d){var m={type:t};if(d)m.payload=d;window.parent.postMessage(m,'*');}
-        window.addEventListener('message',function(e){
-            var d=e.data;
-            if(typeof d==='string'){try{d=JSON.parse(d);}catch(x){return;}}
-            if(!d||!d.type)return;
-            if(d.type==='initActivity'){
-                var p=d.payload||{};p.metaData=p.metaData||{};p.metaData.isConfigured=true;
-                post('updateActivity',p);
+        var activityPayload = {};
+        var eventDefKey = '';
+
+        function post(t, d) {
+            var m = { type: t };
+            if (d !== undefined) m.payload = d;
+            window.parent.postMessage(m, '*');
+        }
+
+        function buildArgs() {
+            if (!eventDefKey) return;
+            activityPayload.arguments = activityPayload.arguments || {};
+            activityPayload.arguments.execute = activityPayload.arguments.execute || {};
+            activityPayload.arguments.execute.inArguments = [
+                {"subscriberKey": "{{Contact.Key}}"},
+                {"emailAddress": "{{Event." + eventDefKey + ".\"EmailAddress\"}}"},
+                {"leadId": "{{Event." + eventDefKey + ".\"LeadId\"}}"},
+                {"leadSource": "{{Event." + eventDefKey + ".\"LeadSource\"}}"},
+                {"company": "{{Event." + eventDefKey + ".\"Company\"}}"},
+                {"productInterest": "{{Event." + eventDefKey + ".\"ProductInterest\"}}"},
+                {"leadScore": "{{Event." + eventDefKey + ".\"LeadScore\"}}"},
+                {"createdDate": "{{Event." + eventDefKey + ".\"CreatedDate\"}}"}
+            ];
+        }
+
+        window.addEventListener('message', function(e) {
+            var d = e.data;
+            if (typeof d === 'string') { try { d = JSON.parse(d); } catch(x) { return; } }
+            if (!d || !d.type) return;
+
+            if (d.type === 'initActivity') {
+                activityPayload = d.payload || {};
+                post('requestInteraction');
             }
-            if(d.type==='clickedNext'||d.type==='clickedDone'){
-                var p=d.payload||{};p.metaData=p.metaData||{};p.metaData.isConfigured=true;
-                post('updateActivity',p);post('nextStep');
+
+            if (d.type === 'requestedInteraction') {
+                var interaction = d.payload || {};
+                var triggers = interaction.triggers || [];
+                if (triggers.length > 0) {
+                    eventDefKey = (triggers[0].metaData || {}).eventDefinitionKey || '';
+                }
+                buildArgs();
+                activityPayload.metaData = activityPayload.metaData || {};
+                activityPayload.metaData.isConfigured = true;
+                post('updateActivity', activityPayload);
             }
-        },false);
+
+            if (d.type === 'clickedNext' || d.type === 'clickedDone') {
+                buildArgs();
+                activityPayload.metaData = activityPayload.metaData || {};
+                activityPayload.metaData.isConfigured = true;
+                post('updateActivity', activityPayload);
+                post('nextStep');
+            }
+
+            if (d.type === 'clickedBack') {
+                post('prevStep');
+            }
+        }, false);
+
         post('ready');
     })();
     </script>
