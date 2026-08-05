@@ -16,12 +16,15 @@
   "arguments": {
     "execute": {
       "inArguments": [
-        {"subscriberKey": "{{Contact.Key}}"},
-        {"email": "{{Event.DEAudience-xxxxxxx.Email}}"},
-        {"firstName": "{{Event.DEAudience-xxxxxxx.FirstName}}"},
-        {"lastName": "{{Event.DEAudience-xxxxxxx.LastName}}"},
-        {"phone": "{{Event.DEAudience-xxxxxxx.Phone}}"}
-      ],
+  {"subscriberKey": "{{Contact.Key}}"},
+  {"emailAddress": "{{Event.DEAudience-Lead_Events.EmailAddress}}"},
+  {"leadId": "{{Event.DEAudience-Lead_Events.LeadId}}"},
+  {"leadSource": "{{Event.DEAudience-Lead_Events.LeadSource}}"},
+  {"company": "{{Event.DEAudience-Lead_Events.Company}}"},
+  {"productInterest": "{{Event.DEAudience-Lead_Events.ProductInterest}}"},
+  {"leadScore": "{{Event.DEAudience-Lead_Events.LeadScore}}"},
+  {"createdDate": "{{Event.DEAudience-Lead_Events.CreatedDate}}"}
+],
       "outArguments": [],
       "timeout": 10000,
       "retryCount": 0,
