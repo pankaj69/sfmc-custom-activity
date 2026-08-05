@@ -26,18 +26,5 @@
       "url": "https://webhook.site/b7583c7a-1b3d-4274-b83c-fb904e3756be"
     }
   },
-  "configurationArguments": {
-    "publish": {
-      "url": "https://webhook.site/b7583c7a-1b3d-4274-b83c-fb904e3756be?lifecycle=publish"
-    },
-    "validate": {
-      "url": "https://webhook.site/b7583c7a-1b3d-4274-b83c-fb904e3756be?lifecycle=validate"
-    },
-    "stop": {
-      "url": "https://webhook.site/b7583c7a-1b3d-4274-b83c-fb904e3756be?lifecycle=stop"
-    },
-    "save": {
-      "url": "https://webhook.site/b7583c7a-1b3d-4274-b83c-fb904e3756be?lifecycle=save"
-    }
-  }
+  "configurationArguments": {}
 }
