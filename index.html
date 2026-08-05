@@ -3,45 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <title>Custom Activity</title>
-    <script src="https://cdn.jsdelivr.net/npm/postmonger@1.0.6/postmonger.js"></script>
 </head>
 <body>
-    <p id="status" style="font-family:Arial;padding:20px;">Loading...</p>
+    <div id="status" style="font-family:monospace;padding:15px;font-size:12px;line-height:1.6;"></div>
     <script>
     (function() {
-        var connection = new Postmonger.Session();
         var payload = {};
         var eventKey = '';
+        var statusEl = document.getElementById('status');
+        var logs = [];
+        var keyFound = false;
 
-        connection.trigger('ready');
+        function addLog(msg) {
+            logs.push(msg);
+            statusEl.innerHTML = logs.join('<br>');
+        }
 
-        connection.on('initActivity', function(data) {
-            payload = data || {};
-            connection.trigger('requestTriggerEventDefinition');
-        });
+        function post(type, data) {
+            var msg = { type: type };
+            if (data !== undefined) msg.payload = data;
+            window.parent.postMessage(msg, '*');
+            addLog('→ ' + type);
+        }
 
-        connection.on('requestedTriggerEventDefinition', function(data) {
-            eventKey = (data || {}).eventDefinitionKey || '';
-            document.getElementById('status').textContent = eventKey
-                ? '✓ Configured (Key: ' + eventKey + ')'
-                : '✓ Configured (No event key found)';
-            buildAndUpdate();
-        });
-
-        connection.on('clickedNext', function() {
-            buildAndUpdate();
-            connection.trigger('nextStep');
-        });
-
-        connection.on('clickedDone', function() {
-            buildAndUpdate();
-            connection.trigger('nextStep');
-        });
-
-        function buildAndUpdate() {
+        function buildArgs() {
             payload.arguments = payload.arguments || {};
             payload.arguments.execute = payload.arguments.execute || {};
-
             if (eventKey) {
                 payload.arguments.execute.inArguments = [
                     {"subscriberKey": "{{Contact.Key}}"},
@@ -54,11 +41,63 @@
                     {"createdDate": "{{Event." + eventKey + ".CreatedDate}}"}
                 ];
             }
-
             payload.metaData = payload.metaData || {};
             payload.metaData.isConfigured = true;
-            connection.trigger('updateActivity', payload);
+            post('updateActivity', payload);
         }
+
+        window.addEventListener('message', function(e) {
+            var d = e.data;
+            if (typeof d === 'string') {
+                try { d = JSON.parse(d); } catch(x) { return; }
+            }
+            if (!d || !d.type) return;
+
+            addLog('← ' + d.type);
+
+            if (d.type === 'initActivity') {
+                payload = d.payload || {};
+                post('requestTriggerEventDefinition');
+
+                setTimeout(function() {
+                    if (!keyFound) {
+                        addLog('⏱ Trying requestInteraction...');
+                        post('requestInteraction');
+                    }
+                }, 2000);
+
+                setTimeout(function() {
+                    if (!keyFound) {
+                        addLog('⚠ No event key detected. Configuring with subscriberKey only.');
+                        buildArgs();
+                    }
+                }, 4000);
+            }
+
+            if (d.type === 'requestedTriggerEventDefinition') {
+                eventKey = (d.payload || {}).eventDefinitionKey || '';
+                if (eventKey) { keyFound = true; addLog('✓ KEY: ' + eventKey); buildArgs(); }
+            }
+
+            if (d.type === 'requestedInteraction') {
+                var triggers = (d.payload || {}).triggers || [];
+                if (triggers.length > 0) {
+                    eventKey = (triggers[0].metaData || {}).eventDefinitionKey
+                           || ((triggers[0].arguments || {}).eventDefinitionKey)
+                           || '';
+                }
+                if (eventKey) { keyFound = true; addLog('✓ KEY: ' + eventKey); }
+                buildArgs();
+            }
+
+            if (d.type === 'clickedNext' || d.type === 'clickedDone') {
+                buildArgs();
+                post('nextStep');
+            }
+        }, false);
+
+        addLog('Activity loaded');
+        post('ready');
     })();
     </script>
 </body>
