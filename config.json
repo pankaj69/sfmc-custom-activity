@@ -16,14 +16,7 @@
   "arguments": {
     "execute": {
       "inArguments": [
-        {"subscriberKey": "{{Contact.Key}}"},
-        {"emailAddress": "{{Event.DEAudience-a3eb8275-4413-3af9-54e7-a883214c71a1.\"EmailAddress\"}}"},
-        {"leadId": "{{Event.DEAudience-a3eb8275-4413-3af9-54e7-a883214c71a1.\"LeadId\"}}"},
-        {"leadSource": "{{Event.DEAudience-a3eb8275-4413-3af9-54e7-a883214c71a1.\"LeadSource\"}}"},
-        {"company": "{{Event.DEAudience-a3eb8275-4413-3af9-54e7-a883214c71a1.\"Company\"}}"},
-        {"productInterest": "{{Event.DEAudience-a3eb8275-4413-3af9-54e7-a883214c71a1.\"ProductInterest\"}}"},
-        {"leadScore": "{{Event.DEAudience-a3eb8275-4413-3af9-54e7-a883214c71a1.\"LeadScore\"}}"},
-        {"createdDate": "{{Event.DEAudience-a3eb8275-4413-3af9-54e7-a883214c71a1.\"CreatedDate\"}}"}
+        {"subscriberKey": "{{Contact.Key}}"}
       ],
       "outArguments": [],
       "timeout": 10000,
