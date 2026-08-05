@@ -16,7 +16,11 @@
   "arguments": {
     "execute": {
       "inArguments": [
-        {"subscriberKey": "{{Contact.Key}}"}
+        {"subscriberKey": "{{Contact.Key}}"},
+        {"email": "{{Event.DEAudience-xxxxxxx.Email}}"},
+        {"firstName": "{{Event.DEAudience-xxxxxxx.FirstName}}"},
+        {"lastName": "{{Event.DEAudience-xxxxxxx.LastName}}"},
+        {"phone": "{{Event.DEAudience-xxxxxxx.Phone}}"}
       ],
       "outArguments": [],
       "timeout": 10000,
