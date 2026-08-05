@@ -23,7 +23,7 @@
         {"company": "{{Event.DEAudience-a3eb8275-4413-3af9-54e7-a883214c71a1.\"Company\"}}"},
         {"productInterest": "{{Event.DEAudience-a3eb8275-4413-3af9-54e7-a883214c71a1.\"ProductInterest\"}}"},
         {"leadScore": "{{Event.DEAudience-a3eb8275-4413-3af9-54e7-a883214c71a1.\"LeadScore\"}}"},
-        {"createdDate": "{{Event.DEAudience-a3eb8275-4413-3af9-54e7-a883214c71a1.\"CreatedDate\"}}"} 
+        {"createdDate": "{{Event.DEAudience-a3eb8275-4413-3af9-54e7-a883214c71a1.\"CreatedDate\"}}"}
       ],
       "outArguments": [],
       "timeout": 10000,
@@ -45,6 +45,13 @@
     },
     "save": {
       "url": "https://webhook.site/b7583c7a-1b3d-4274-b83c-fb904e3756be?lifecycle=save"
+    }
+  },
+  "userInterfaces": {
+    "configModal": {
+      "height": 200,
+      "width": 400,
+      "url": "https://admirable-scone-86b76b.netlify.app/index.html"
     }
   }
 }
